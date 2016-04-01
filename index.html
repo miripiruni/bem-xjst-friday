@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Idiomatic BEMHTML way</title>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="shower/themes/ribbon/styles/screen-16x10.css">
+    <link rel="stylesheet" href="./styles/common.css">
+
+    <!--<link rel="stylesheet" href="highlight.js/styles/default.css">-->
+    <!--<script src="highlight.js/highlight.pack.js"></script>-->
+    <!--<script>hljs.initHighlightingOnLoad();</script>-->
+    <script src="./scripts/jquery.js"></script>
+    <script src="./scripts/tweenlite.min.js"></script>
+</head>
+<body class="shower list">
+    <header class="caption">
+        <h1>Idiomatic BEMHTML way</h1>
+        <p>Yandex</p>
+    </header>
+
+    <section class="slide" id="cover" style="background: #ffdb4d">
+        <h2 style="background: rgba(0,0,0,0); color: #000; ; padding-bottom: 30px;">Idiomatic BEMHTML way</h2>
+
+        <p>Вячеслав Олиянчук</p>
+        <p class="foot-note">1 апреля 2016</p>
+    </section>
+
+    <section class="slide">
+    </section>
+
+    <section class="slide">
+        <h2>Шаблоны приоритетнее,<br>чем поля BEMJSON</h2>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">([
+    { block: 'text' },
+    { block: 'text', tag: 'em' }
+]);</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">block('text')
+  .tag()(function() {
+    return this.ctx.tag || 'span';
+  });</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+    </section>
+
+
+
+    <section class="slide">
+        <h2>apply, applyNext, applyCtx</h2>
+    </section>
+    <section class="slide">
+        <pre>
+            <code>/**</code>
+             <code> * @params {String} modeName название режима</code>
+             <code> * @returns {*} Возвращает результат работы режима</code>
+             <code> */</code>
+            <code>apply(modeName)</code>
+        </pre>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">({ block: 'text' });</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">block('text')(
+  bem()(false),
+  tag()('span'),
+
+  content()(function() {
+    return apply('tag');
+  })
+);</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <pre>
+            <code>/**</code>
+             <code> * @returns {*} Возвращает результат работы режима</code>
+             <code> */</code>
+            <code>applyNext()</code>
+        </pre>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">({ block: 'text' });</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">block('text')(
+  tag()('s'),
+
+  tag()(function() {
+    var res = applyNext();
+    // res === 's'
+    return res + 'pan';
+  })
+);</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <pre>
+            <code>/**</code>
+             <code> * @params {*} произвольный bemjson</code>
+             <code> * @returns {String} Возвращает результирующий HTML</code>
+             <code> */</code>
+            <code>applyCtx(bemjson)</code>
+        </pre>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">({ block: 'example' });</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">block('example')
+.content()(function() {
+  return applyCtx({
+      block: 'wrap',
+      content: { block: 'banner' }
+  });
+});</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <p><code>apply()</code>: вызвать указанный режим</p>
+        <p class="next"><code>applyNext()</code>: применить шаблон с меньшим приоритетом, чем текущий</p>
+        <p class="next"><code>applyCtx()</code>: применить шаблоны к произвольному BEMJSON-у</p>
+    </section>
+    <section class="slide">
+        <h2>Итого</h2>
+        <p>В 99% случаев вам нужен <code>applyNext()</code> или
+            <code>applyCtx(bemjson)</code>.</p>
+        <p>Если нужны детали или уточнения — <a
+                href="https://github.com/bem/bem-xjst/tree/docs/ru/7-runtime.md">читайте доку, раздел про runtime</a>.</p>
+    </section>
+
+
+
+    <section class="slide">
+        <h2>this.mods и this.elemMods</h2>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">([
+  {
+    block: 'button',
+    mods: { disabled: true }
+  },
+  {
+    block: 'button'
+  }
+]);</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">block('button')
+.content()(function() {
+  var chtoEto = JSON.stringify;
+  return chtoEto(this.mods);
+});</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">([
+  {
+    block: 'button',
+    elem: 'text',
+    elemMods: { disabled: true }
+  },
+  {
+    block: 'button',
+    elem: 'text'
+  }
+]);</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">block('button')
+.elem('text')
+.content()(function() {
+  var chtoEto = JSON.stringify;
+  return chtoEto(this.elemMods);
+});</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">([
+  {
+    block: 'button'
+  },
+  {
+    block: 'button',
+    mods: { disabled: true }
+  }
+]);</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">block('button')
+.def()(function() {
+  this.mods && // >__<
+    (this.mods.state = 'loading');
+
+  return applyNext();
+});</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <h2>Итого</h2>
+        <p>this.mods и this.elemMods есть всегда.</p>
+        <p>this.mods &amp;&amp; this.mods.any — так делать не нужно.</p>
+    </section>
+
+
+
+    <section class="slide">
+        <h2>Модификаторы</h2>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">({ block: 'menu' });</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">block('menu')(
+  tag()('nav'),
+  def()(function() {
+    // Выставляем модификатор
+    // в рантайме
+    this.mods.type = 'toc';
+    return applyNext();
+  }),
+  // Только для table of contents
+  mod('type', 'toc')
+    .attrs()({ id: 'toc' })
+);</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">({ block: 'menu' });</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">block('menu')(
+  tag()('nav'),
+  // Миксуем модификатор
+  mix()({
+    mods: { type: 'toc' }
+  }),
+  // Только для table of contents
+  // (не применится)
+  mod('type', 'toc')
+    .attrs()({ id: 'toc' })
+);</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <h2>Варианты для разных задач</h2>
+        <p>Доопределить <code>this.mods</code>, чтобы шаблоны применились.</p>
+        <p>Примиксовать модификатор, чтобы шаблоны не применились.</p>
+    </section>
+
+
+
+    <section class="slide">
+        <h2>Не трогайте this.ctx</h2>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">({
+    block: 'image',
+    urls: {
+        big: '/gfnky9dewkjrevdvsvew.png',
+        medium: '/df97dsfb98789dfbsd8.png',
+        small: '/sergefdudf74ksskgocevsd.png'
+    },
+    width: '320',
+    height: '240',
+    alt: ''
+ });</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">block('image').def()(function() {
+    return JSON.stringify(this.ctx, null, '\t');
+});</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">({
+    block: 'page',
+    content: {
+        elem: 'header'
+    }
+ });</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">block('page').elem('header').def()(function() {
+    return 'this.block=' + this.block +
+        ', this.ctx.block=' + this.ctx.block;
+});</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <h2>Итого</h2>
+        <p>this.ctx — текущий узел BEMJSON.</p>
+        <p>this.block, this.elem, this.mods — нормализованные сведения о текущем узле.</p>
+    </section>
+
+
+
+
+    <section class="slide">
+        <h2>Почему не сработает [].toString()?</h2>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">({
+  block: 'z-wizard',
+  attrs: {
+    'data-point': [ 'lat', 'lon' ]
+  }
+});</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">/*block('z-wizard')
+.content()(function() {
+  return applyCtx([
+    'lat',
+    'lon'
+  ]);
+});/**/
+</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">({
+  block: 'test',
+  attrs: {
+    id: { block: 'reapply-me' },
+    name: { block: 'reapply-me' }
+  }
+});</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">block('reapply-me')
+.def()('Привет!');</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <h2>Итого</h2>
+        <p>Шаблонизатор обрабатывает массивы в BEMJSON не используя toString()</p>
+    </section>
+
+
+
+    <section class="slide">
+        <h2>Используйте match вместо if</h2>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">({ block: 'spin1' });</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">block('spin1')
+.def()(function() {
+  var mods = this.mods;
+  mods.theme ||
+    (mods.theme='gray-32');
+
+  return applyNext({
+    'ctx.mods': mods
+  });
+});</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">({ block: 'spin2' });</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">block('spin2')
+.match(function() {
+  return !this.mods.theme;
+})
+.def()(function() {
+  this.mods.theme = 'gray-32';
+
+  return applyNext();
+});</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">([
+  {
+    block: 'offer',
+    elem: 'image',
+    url: '/photo.png'
+  },
+  {
+    block: 'offer',
+    elem: 'image'
+  }
+]);</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">block('offer').elem('image')
+.replace()(function() {
+  var url = this.ctx.url;
+  return {
+    block: 'image',
+    url: url,
+    mix: url ? '' : {
+      block: 'image',
+      mods: { type: 'default' }
+    },
+    attrs: {
+        alt: url ? '' : 'Нет фото'
+    }
+  };
+});</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">([
+  {
+    block: 'offer',
+    elem: 'image',
+    url: '/photo.png'
+  },
+  {
+    block: 'offer',
+    elem: 'image'
+  }
+]);</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">// Картинка товара
+block('offer').elem('image')
+.replace()(function() {
+    return {
+        block: 'image',
+        url: this.ctx.url
+    };
+});
+
+// Картинка заглушка
+block('image').match(function() {
+  return !this.ctx.url;
+})(
+  mix()({
+    block: 'image',
+    mods: { type: 'default' }
+  }),
+  attrs()({
+    alt: 'Нет фото'
+  })
+);
+</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <h2>Итого</h2>
+        <p>match — декларативная сила ;—)</p>
+    </section>
+
+
+
+    <!--TODO-->
+    <section class="slide">
+        <h2>HTML&amp;nbsp;entity&amp;nbsp;smells</h2>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">({
+    block: 'refresh',
+    content: '↺'
+});</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">
+                        </div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <h2>Итого</h2>
+        <p>Научитесь печатать нужные символы сразу.</p>
+        <p>Изучите возможности Alt + …</p>
+    </section>
+
+
+
+    <section class="slide">
+        <h2>Не забывайте про replace()</h2>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">({
+    block: 'map-holder'
+});</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">block('map-holder')
+.def()(function() {
+  return applyCtx({
+    block: 'map'
+    //,
+    // …
+  });
+});</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <div class="demo demo_state_loading i-bem" data-bem='{"demo":{"version":"6.2.0_2"}}'>
+            <div class="demo__content">
+                <div class="demo__top">
+                    <div class="editor demo__bemjson i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">({
+    block: 'map-holder'
+});</div>
+                    </div>
+                    <div class="editor demo__bemhtml i-bem" data-bem='{"editor":{}}'>
+                        <div class="editor__textarea">block('map-holder')
+.replace()(function() {
+  return {
+    block: 'map'
+    //,
+    // …
+  };
+});</div>
+                    </div>
+                </div>
+                <div class="demo__bottom">
+                    <div class="editor demo__html i-bem" data-bem='{"editor":{"readOnly":true,"showInvisibles":true,"mode":"ace/mode/html","showGutter":false}}'>
+                        <div class="editor__textarea"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo__paranja">
+                <div class="demo__spinner">
+                    <div class="spin spin_visible"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="slide">
+        <h2>Итого</h2>
+        <p>def() + applyCtx({…}) — это replace().</p>
+    </section>
+
+
+
+    <section class="slide">
+        <h2>Конвертер</h2>
+    </section>
+    <section class="slide">
+        <pre><code>
+// Устанавливаем корвертер
+npm install -g bemhtml-syntax
+
+// Конвертируем старые шаблоны
+find *.blocks -name '*.bemhtml' -type f | while read f; do
+  bemhtml-syntax --format bemhtml -Qr -i "${f}" -o "${f}.js";
+  jscs --fix "${f}.js";
+done
+
+// Удалите старые шаблоны после проверки работоспособности новых
+find *.blocks -name '*.bemhtml' -type f -delete
+</code></pre>
+    </section>
+    <section class="slide">
+        <h2>Итого</h2>
+        <p>Сконверовать BEMHTML шаблоны в BEMHTML.js очень просто.</p>
+    </section>
+
+
+
+    <section class="slide" style="background: #fff url(pictures/tnx.png) bottom right
+        no-repeat; background-size: 50%;">
+        <h2>Благодарю за внимание</h2>
+        <p><a href="https://staff.yandex-team.ru/miripiruni/">@miripiruni</a></p>
+    </section>
+
+
+    <section class="slide">
+        <h2>Благодарю за внимание</h2>
+        <ul>
+            <li>Документация на «русском-понятном»: <a href="https://github.com/bem/bem-xjst/blob/master/docs/ru/">GH/bem/bem-xjst/docs/ru/</a></li>
+            <li><a href="https://bem.github.io/bem-xjst">bem.github.io/bem-xjst</a> — можно шарить примеры</li>
+            <li><a href="https://github.com/bem/bem-xjst/issues?q=milestone%3A5.0.0+is%3Aclosed">npm install bem-xjst</a></li>
+        </ul>
+    </section>
+
+    <div class="progress"></div>
+    <script src="shower/shower.js"></script>
+
+    <script src="./demo/xindex.js"></script>
+    <script src="./demo/xindex.browser.bemhtml.js"></script>
+    <script src="./demo/ace.js"></script>
+</body>
+</html>
